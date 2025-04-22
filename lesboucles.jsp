@@ -27,9 +27,6 @@
         <br>
     <% } %>
     </p>
-
-
-  <% int cpt = Integer.parseInt(valeur); %>
     <p>
     <% for (int i = 1; i <= cpt; i++) { %>
         <% for (int j = 1; j <= i; j++) { %>
@@ -37,7 +34,7 @@
         <% } %>
         <br>
     <% } %>
-    </p
+    </p>
 
 
 
