@@ -30,6 +30,22 @@
 <p>Exemple si l'utilisateur saisie le valeur 5</p>
 <p>*****</br>*****</br>*****</br>*****</br>*****</p>
 
+public class Main {
+  public static void main(String[] args) {
+    
+    int Val = 5;
+
+    for(int i = 0; i < Val; i++) {
+      for(int j = 0; j < Val; j++) {
+        System.out.print("*");
+      }
+      System.out.println(); // Pour passer à la ligne suivante
+    }
+  
+  }
+}
+
+
 <h2>Exercice 2 : Triangle rectangle gauche</h2>
 <p>Ecrire le code afin de produire un triangle rectangle aligné sur la gauche</p>
 <p>Exemple si l'utilisateur saisie le valeur 5</p>
