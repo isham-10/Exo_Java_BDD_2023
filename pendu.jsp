@@ -1,60 +1,43 @@
-<%public class Main {
-    public static void main(String[] args) {
-        JeuPendu jeu = new JeuPendu();
-        jeu.jouer();
-    }
-}
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="JeuPendu"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="javax.servlet.http.HttpSession"%>
 
-public class JeuPendu {
-    private String motADeviner;
-    private StringBuilder motAffiche;
-    private ArrayList<Character> lettresProposees;
-    private int essaisRestants;
+<html>
+<head>
+    <title>Jeu du Pendu</title>
+</head>
+<body>
+    <h1>Jeu du Pendu</h1>
+    <%
+        HttpSession session = request.getSession();
+        JeuPendu jeu = (JeuPendu) session.getAttribute("jeu");
 
-    public JeuPendu() {
-        String[] mots = {"PROGRAMMATION", "JAVA", "PENDU", "ORDINATEUR", "DEVELOPPEUR"};
-        Random rand = new Random();
-        motADeviner = mots[rand.nextInt(mots.length)];
-        motAffiche = new StringBuilder("_".repeat(motADeviner.length()));
-        lettresProposees = new ArrayList<>();
-        essaisRestants = 6;
-    }
-
-    public void jouer() {
-        Scanner scanner = new Scanner(System.in);
-
-        while (essaisRestants > 0 && motAffiche.indexOf("_") != -1) {
-            System.out.println("Mot à deviner : " + motAffiche);
-            System.out.println("Lettres proposées : " + lettresProposees);
-            System.out.println("Essais restants : " + essaisRestants);
-            System.out.print("Proposez une lettre : ");
-            char lettre = scanner.next().toUpperCase().charAt(0);
-
-            if (lettresProposees.contains(lettre)) {
-                System.out.println("Vous avez déjà proposé cette lettre.");
-                continue;
-            }
-
-            lettresProposees.add(lettre);
-
-            if (motADeviner.indexOf(lettre) >= 0) {
-                for (int i = 0; i < motADeviner.length(); i++) {
-                    if (motADeviner.charAt(i) == lettre) {
-                        motAffiche.setCharAt(i, lettre);
-                    }
-                }
-            } else {
-                essaisRestants--;
-            }
+        if (jeu == null) {
+            jeu = new JeuPendu();
+            session.setAttribute("jeu", jeu);
         }
+    %>
+    <p>Mot à deviner : <%= jeu.getMotAffiche() %></p>
+    <p>Lettres proposées : <%= jeu.getLettresProposees() %></p>
+    <p>Essais restants : <%= jeu.getEssaisRestants() %></p>
 
-        if (motAffiche.indexOf("_") == -1) {
-            System.out.println("Félicitations ! Vous avez deviné le mot : " + motADeviner);
-        } else {
-            System.out.println("Dommage ! Vous avez perdu. Le mot était : " + motADeviner);
+    <form action="JeuPenduServlet" method="post">
+        <label for="lettre">Proposez une lettre :</label>
+        <input type="text" id="lettre" name="lettre" maxlength="1" required>
+        <input type="submit" value="Proposer">
+    </form>
+
+    <%
+        if (jeu.estGagne()) {
+    %>
+        <p>Félicitations ! Vous avez deviné le mot : <%= jeu.getMotADeviner() %></p>
+    <%
+        } else if (jeu.estPerdu()) {
+    %>
+        <p>Dommage ! Vous avez perdu. Le mot était : <%= jeu.getMotADeviner() %></p>
+    <%
         }
-    }
-}%>
+    %>
+</body>
+</html>
