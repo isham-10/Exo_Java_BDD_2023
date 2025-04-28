@@ -1,4 +1,4 @@
-public class Main {
+<%public class Main {
     public static void main(String[] args) {
         JeuPendu jeu = new JeuPendu();
         jeu.jouer();
@@ -57,4 +57,4 @@ public class JeuPendu {
             System.out.println("Dommage ! Vous avez perdu. Le mot était : " + motADeviner);
         }
     }
-}
+}%>
