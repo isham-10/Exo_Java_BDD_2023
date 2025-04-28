@@ -16,7 +16,7 @@ public class Task {
     private String dueDate;
     private boolean isCompleted;
 
-    public Task(String title, String description, String dueDate) {
+   <% public Task(String title, String description, String dueDate) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
@@ -32,7 +32,7 @@ public class Task {
 
     public String getDueDate() { return dueDate; }
     void setCompleted(boolean isCompleted) { this.isCompleted = isCompleted; }
-}
+}%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="javax.servlet.http.HttpSession"%>
