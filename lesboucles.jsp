@@ -11,13 +11,10 @@
     <input type="submit" value="Afficher">
 </form>
 
-<%-- Récupération de la valeur saisie par l'utilisateur --%>
 <% String valeur = request.getParameter("valeur"); %>
     
-<%-- Vérification de l'existence de la valeur --%>
 <% if (valeur != null && !valeur.isEmpty()) { %>
 
-<%-- Boucle for pour afficher une ligne d'étoiles --%>
     <% int cpt = Integer.parseInt(valeur); %>
     <p>
     <% for (int i = 0; i < cpt; i++) { %>
