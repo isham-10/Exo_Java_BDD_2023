@@ -31,13 +31,30 @@
    
     
 <h2>Exercice 1 : Comparaison 1</h2>
-<p>Ecrire un programme qui demande à l'utilisateur de saisir 3 valeurs (des chiffres),</br>
-A, B et C et dites nous si la valeur de C est comprise entre A et B.</br>
-Exemple :</br>
-A = 10</br>
-B = 20</br>
-C = 15</br>
-Oui C est compris entre A et B</p>
+public class ValeurEntreDeuxBornes {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Demande à l'utilisateur de saisir A, B et C
+        System.out.print("Entrez la valeur de A : ");
+        int A = scanner.nextInt();
+
+        System.out.print("Entrez la valeur de B : ");
+        int B = scanner.nextInt();
+
+        System.out.print("Entrez la valeur de C : ");
+        int C = scanner.nextInt();
+
+        // Vérification si C est entre A et B, peu importe l'ordre
+        if ((C >= A && C <= B) || (C >= B && C <= A)) {
+            System.out.println("Oui, C est compris entre A et B.");
+        } else {
+            System.out.println("Non, C n'est pas compris entre A et B.");
+        }
+
+        scanner.close();
+    }
+}
 
 <h2>Exercice 2 : Pair ou Impair ?</h2>
 <p>Écrivez un programme pour vérifier si un nombre est pair ou impair en utilisant une structure if</p>
