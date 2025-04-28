@@ -2,36 +2,35 @@
 
 <html>
 <head>
-<title>Taches</title>
+    <title>Tâches</title>
 </head>
-<body bgcolor=white>
-<h1>Saisir une tache</h1>
-<form action="#" method="post">
-    <label for="inputValeur">Saisir le nom d'une tache : </label>
-    <input type="text" id="inputValeur" name="valeur">
-    <input type="submit" value="Enregistrer">
-</form>
+<body bgcolor="white">
+    <h1>Saisir une tâche</h1>
+    <form action="#" method="post">
+        <label for="inputValeur">Saisir le nom d'une tâche : </label>
+        <input type="text" id="inputValeur" name="valeur">
+        <input type="submit" value="Enregistrer">
+    </form>
 
-<%! 
-    class MyClass {
-        String nameTache;
+    <%! 
+        class Task {
+            String name;
 
-        public MyClass(String name) {
-            nameTache = name;
+            public Task(String name) {
+                this.name = name;
+            }
         }
-    }
-%>
+    %>
 
-<%
-    String valeur = request.getParameter("valeur");
+    <%
+        String valeur = request.getParameter("valeur");
 
-    if (valeur != null && !valeur.isEmpty()) {
-        MyClass tache = new MyClass(valeur);
-%>
-        <p>Nom de la tâche : <%= tache.nameTache %></p>
-<%
-    }
-%>
-
+        if (valeur != null && !valeur.isEmpty()) {
+            Task task = new Task(valeur);
+    %>
+            <p>Nom de la tâche : <%= task.name %></p>
+    <%
+        }
+    %>
 </body>
 </html>
