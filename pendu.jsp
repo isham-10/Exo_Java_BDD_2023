@@ -1,43 +1,133 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="JeuPendu"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="javax.servlet.http.HttpSession"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Random"%>
+<%@page import="java.util.Arrays"%>
 
 <html>
 <head>
-    <title>Jeu du Pendu</title>
+<title>Jeu du Pendu</title>
 </head>
-<body>
-    <h1>Jeu du Pendu</h1>
-    <%
-        HttpSession session = request.getSession();
-        JeuPendu jeu = (JeuPendu) session.getAttribute("jeu");
+<body bgcolor="white">
+<h1>Jeu du Pendu</h1>
 
-        if (jeu == null) {
-            jeu = new JeuPendu();
-            session.setAttribute("jeu", jeu);
+<%! 
+    public class JeuPendu {
+        private String motADeviner;
+        private char[] motAffiche;
+        private List<Character> lettresProposees;
+        private int essaisRestants;
+
+        public JeuPendu(List<String> listeMots, int essais) {
+            Random rand = new Random();
+            motADeviner = listeMots.get(rand.nextInt(listeMots.size()));
+            motAffiche = new char[motADeviner.length()];
+            for (int i = 0; i < motAffiche.length; i++) {
+                motAffiche[i] = '_';
+            }
+            lettresProposees = new ArrayList<>();
+            essaisRestants = essais;
         }
-    %>
-    <p>Mot à deviner : <%= jeu.getMotAffiche() %></p>
-    <p>Lettres proposées : <%= jeu.getLettresProposees() %></p>
-    <p>Essais restants : <%= jeu.getEssaisRestants() %></p>
 
-    <form action="JeuPenduServlet" method="post">
-        <label for="lettre">Proposez une lettre :</label>
-        <input type="text" id="lettre" name="lettre" maxlength="1" required>
-        <input type="submit" value="Proposer">
-    </form>
-
-    <%
-        if (jeu.estGagne()) {
-    %>
-        <p>Félicitations ! Vous avez deviné le mot : <%= jeu.getMotADeviner() %></p>
-    <%
-        } else if (jeu.estPerdu()) {
-    %>
-        <p>Dommage ! Vous avez perdu. Le mot était : <%= jeu.getMotADeviner() %></p>
-    <%
+        public boolean proposerLettre(char lettre) {
+            if (lettresProposees.contains(lettre)) {
+                return false;
+            }
+            lettresProposees.add(lettre);
+            boolean lettreTrouvee = false;
+            for (int i = 0; i < motADeviner.length(); i++) {
+                if (motADeviner.charAt(i) == lettre) {
+                    motAffiche[i] = lettre;
+                    lettreTrouvee = true;
+                }
+            }
+            if (!lettreTrouvee) {
+                essaisRestants--;
+            }
+            return lettreTrouvee;
         }
-    %>
+
+        public boolean estGagne() {
+            for (char c : motAffiche) {
+                if (c == '_') {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public boolean estPerdu() {
+            return essaisRestants <= 0;
+        }
+
+        public String afficherEtat() {
+            return "Mot : " + new String(motAffiche) + "<br>" +
+                   "Lettres proposées : " + lettresProposees + "<br>" +
+                   "Essais restants : " + essaisRestants + "<br>";
+        }
+
+        public String getMotADeviner() {
+            return motADeviner;
+        }
+    }
+%>
+
+<%
+    List<String> listeMots = Arrays.asList("PROGRAMME", "JAVA", "ORDINATEUR", "INTERNET", "CLAVIER", "SOURIS", "ECRAN", "LOGICIEL", "COMPILATEUR", "ALGORITHME");
+
+    // Vérifier si un jeu existe déjà dans la session
+    JeuPendu jeu = (JeuPendu) session.getAttribute("jeu");
+
+    if (jeu == null) {
+        // Si non, créer un nouveau jeu
+        jeu = new JeuPendu(listeMots, 6);
+        session.setAttribute("jeu", jeu);
+    }
+
+    // Récupérer la lettre proposée
+    String lettreProposee = request.getParameter("lettre");
+    if (lettreProposee != null && !lettreProposee.isEmpty()) {
+        jeu.proposerLettre(lettreProposee.toUpperCase().charAt(0));
+    }
+
+    // Afficher l'état du jeu
+    out.println(jeu.afficherEtat());
+%>
+
+<%
+    if (jeu.estGagne()) {
+%>
+        <h2>Félicitations, vous avez gagné ! 🎉</h2>
+        <form action="pendu.jsp" method="post">
+            <input type="submit" value="Rejouer">
+            <input type="hidden" name="restart" value="true">
+        </form>
+<%
+    } else if (jeu.estPerdu()) {
+%>
+        <h2>Dommage, vous avez perdu. Le mot était : <%= jeu.getMotADeviner() %> 😢</h2>
+        <form action="pendu.jsp" method="post">
+            <input type="submit" value="Rejouer">
+            <input type="hidden" name="restart" value="true">
+        </form>
+<%
+    } else {
+%>
+        <form action="pendu.jsp" method="post">
+            <label for="lettre">Proposez une lettre :</label>
+            <input type="text" id="lettre" name="lettre" maxlength="1" required>
+            <input type="submit" value="Envoyer">
+        </form>
+<%
+    }
+
+    // Gérer une demande de redémarrage
+    String restart = request.getParameter("restart");
+    if ("true".equals(restart)) {
+        session.removeAttribute("jeu"); // Supprimer l'ancien jeu
+        response.sendRedirect("pendu.jsp"); // Recharger la page
+    }
+%>
+
 </body>
 </html>
