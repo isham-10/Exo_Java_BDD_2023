@@ -1,6 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%!
 public class AsciiArtGenerator {
+    // Constants
+    private static final int CHAR_WIDTH = 4;
+    private static final int CHAR_HEIGHT = 5;
     private static final String[] ASCII_ART = {
         " #  ##   ## ##  ### ###  ## # # ###  ## # # #   # # ###  #  ##   #  ##   ## ### # # # # # # # # # # ### ### ",
         "# # # # #   # # #   #   #   # #  #    # # # #   ### # # # # # # # # # # #    #  # # # # # # # # # #   #   # ",
@@ -10,31 +13,31 @@ public class AsciiArtGenerator {
     };
 
     public static String generate(String text) {
-        final int CHAR_WIDTH = 4;
-        final int CHAR_HEIGHT = 5;
-        StringBuilder result = new StringBuilder();
-        
         if (text == null || text.trim().isEmpty()) {
             return "";
         }
         
         text = text.toUpperCase();
+        StringBuilder result = new StringBuilder();
         
         for (int row = 0; row < CHAR_HEIGHT; row++) {
-            StringBuilder line = new StringBuilder();
-            for (char c : text.toCharArray()) {
-                int index = Character.isLetter(c) ? c - 'A' : 26;
-                int startPos = index * CHAR_WIDTH;
-                line.append(ASCII_ART[row], startPos, startPos + CHAR_WIDTH);
-            }
-            result.append(line.toString()).append("<br>");
+            result.append(buildAsciiLine(row, text)).append("<br>");
         }
         
         return result.toString();
     }
+
+    private static String buildAsciiLine(int row, String text) {
+        StringBuilder line = new StringBuilder();
+        for (char c : text.toCharArray()) {
+            int index = Character.isLetter(c) ? c - 'A' : 26;
+            int startPos = index * CHAR_WIDTH;
+            line.append(ASCII_ART[row], startPos, startPos + CHAR_WIDTH);
+        }
+        return line.toString();
+    }
 }
 %>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -90,6 +93,7 @@ public class AsciiArtGenerator {
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             overflow-x: auto;
+            line-height: 1.2;
         }
     </style>
 </head>
@@ -97,21 +101,22 @@ public class AsciiArtGenerator {
     <h1>Générateur ASCII Art</h1>
     
     <form method="post">
-        <input type="text" name="textInput" placeholder="Entrez votre texte ici..." required>
+        <input type="text" name="textInput" 
+               placeholder="Entrez votre texte ici..." 
+               value="<%= request.getMethod().equalsIgnoreCase("POST") 
+                          ? request.getParameter("textInput") 
+                          : "" %>"
+               required>
         <button type="submit">Générer l'ASCII Art</button>
     </form>
     
-    <% 
-    if ("POST".equalsIgnoreCase(request.getMethod())) {
+    <% if ("POST".equalsIgnoreCase(request.getMethod())) { 
         String text = request.getParameter("textInput");
-        if (text != null && !text.trim().isEmpty()) {
-    %>
+        if (text != null && !text.trim().isEmpty()) { %>
             <div class="result">
                 <%= AsciiArtGenerator.generate(text) %>
             </div>
-    <%
-        }
-    }
-    %>
+    <%  }
+    } %>
 </body>
 </html>
