@@ -14,10 +14,7 @@
         <pre id="result"></pre>
     </div>
     <script src="script.js"></script>
-</body>
-</html>
-
-<%body {
+<body {
     font-family: Arial, sans-serif;
     max-width: 800px;
     margin: 0 auto;
@@ -53,4 +50,8 @@ button:hover {
     text-align: left;
     white-space: pre-wrap;
     font-family: monospace;
-}%>
+}
+</body>
+</html>
+
+
