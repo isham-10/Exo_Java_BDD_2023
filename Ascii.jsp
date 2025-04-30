@@ -78,12 +78,13 @@
             final int L = 4;  // Largeur d'un caractère
             final int H = 5;  // Hauteur d'un caractère
             
+            // Les 26 premières lettres (A-Z) puis les chiffres (0-9) puis caractère spécial
             String[] rows = {
-                " #  ##   ## ##  ### ###  ## # # ###  ## # # #   # # ###  #  ##   #  ##   ## ### # # # # # # # # # # ### ### ",
-                "# # # # #   # # #   #   #   # #  #    # # # #   ### # # # # # # # # # # #    #  # # # # # # # # # #   #   # ",
-                "### ##  #   # # ##  ##  # # ###  #    # ##  #   ### # # # # ##  # # ##   #   #  # # # # ###  #   #   #   ## ",
-                "# # # # #   # # #   #   # # # #  #  # # # # #   # # # # # # #    ## # #   #  #  # # # # ### # #  #  #       ",
-                "# # ##   ## ##  ### #    ## # # ###  #  # # ### # # # #  #  #     # # # ##   #  ###  #  # # # #  #  ###  #  "
+                " #  ##   ## ##  ### ###  ## # # ###  ## # # #   # # ###  #  ##   #  ##   ## ### # # # # # # # # # # ### ###  ##   # # # # # # # # # # #     # # # # # # # # # # # # # # # ",
+                "# # # # #   # # #   #   #   # #  #    # # # #   ### # # # # # # # # # # #    #  # # # # # # # # # #   #   #   #   # # # # # # # # # # # #    # # # # # # # # # # # # # # # ",
+                "### ##  #   # # ##  ##  # # ###  #    # ##  #   ### # # # # ##  # # ##   #   #  # # # # ###  #   #   #   ##   #   # # # # # # # # # # ###     ### # # # # ###  #  ### # # ",
+                "# # # # #   # # #   #   # # # #  #  # # # # #   # # # # # # #    ## # #   #  #  # # # # ### # #  #  #       #   # # # # # # # # # # # # #        # # # # # # # # # # # # # ",
+                "# # ##   ## ##  ### #    ## # # ###  #  # # ### # # # #  #  #     # # # ##   #  ###  #  # # # #  #  ###  #     # # # # ###  #  ### # # # #      # # # # ### # # # # # # # "
             };
 
             StringBuilder[] asciiLines = new StringBuilder[H];
@@ -94,13 +95,20 @@
             input = input.toUpperCase();
             for (int j = 0; j < input.length(); j++) {
                 char c = input.charAt(j);
-                int index = (c >= 'A' && c <= 'Z') ? c - 'A' : 26; // 26 pour les caractères non alphabétiques
+                int index;
+                
+                if (c >= 'A' && c <= 'Z') {
+                    index = c - 'A'; // A-Z: 0-25
+                } else if (c >= '0' && c <= '9') {
+                    index = 26 + (c - '0'); // 0-9: 26-35
+                } else {
+                    index = 36; // Caractère spécial
+                }
 
                 for (int i = 0; i < H; i++) {
                     int start = index * L;
                     int end = start + L;
                     if (end <= rows[i].length()) {
-                        // Ajoute le caractère ASCII + un espace (sauf après le dernier caractère)
                         asciiLines[i].append(rows[i].substring(start, end));
                         if (j < input.length() - 1) {
                             asciiLines[i].append(" ");
