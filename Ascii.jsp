@@ -1,46 +1,65 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%!
-public class AsciiArtGenerator {
-    private final int CHAR_WIDTH = 4;
-    private final int CHAR_HEIGHT = 5;
-    private final String[] ASCII_ART = {
-        " #  ##   ## ##  ### ###  ## # # ###  ## # # #   # # ###  #  ##   #  ##   ## ### # # # # # # # # # # ### ### ",
-        "# # # # #   # # #   #   #   # #  #    # # # #   ### # # # # # # # # # # #    #  # # # # # # # # # #   #   # ",
-        "### ##  #   # # ##  ##  # # ###  #    # ##  #   ### # # # # ##  # # ##   #   #  # # # # ###  #   #   #   ## ",
-        "# # # # #   # # #   #   # # # #  #  # # # # #   # # # # # # #    ## # #   #  #  # # # # ### # #  #  #       ",
-        "# # ##   ## ##  ### #    ## # # ###  #  # # ### # # # #  #  #     # # # ##   #  ###  #  # # # #  #  ###  #  "
-    };
-
-    public String generate(String text) {
-        if (text == null || text.trim().isEmpty()) {
-            return "";
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ASCII Art</title>
+    <style>
+        pre {
+            font-family: monospace;
+            font-size: 16px;
         }
-        
-        text = text.toUpperCase();
-        StringBuilder result = new StringBuilder();
-        
-        for (int row = 0; row < CHAR_HEIGHT; row++) {
-            result.append(buildAsciiLine(row, text)).append("<br>");
-        }
-        
-        return result.toString();
-    }
+    </style>
+</head>
+<body>
+    <h1>ASCII ART</h1>
 
-    private String buildAsciiLine(int row, String text) {
-        StringBuilder line = new StringBuilder();
-        boolean firstChar = true;
-        for (char c : text.toCharArray()) {
-            if (!firstChar) {
-                line.append(" "); // Ajoute un espace avant chaque caractère sauf le premier
+    <form method="post">
+        Entrez un mot : <input type="text" name="text" />
+        <input type="submit" value="Afficher" />
+    </form>
+
+<%
+    int L = 4;
+    int H = 5;
+
+    String input = request.getParameter("text");
+    if (input != null && !input.isEmpty()) {
+        input = input.toUpperCase();
+
+        String[] rows = new String[H];
+        rows[0] = " #  ##   ## ##  ### ###  ## # # ###  ## # # #   # # ### ### ### ### ##  ### ### # # # # # # # # # # ### ";
+        rows[1] = "# # # # #   # # #   #   #   # #  #    # ##  #   ### # # # # # # # # # # #    #  # # # # # # # #  #    #  ";
+        rows[2] = "### ##  #   # # ##  ##  # # ###  #    # #   #   # # # # # # ### # # ##  ###  #  # # # # # #  #   #   #   ";
+        rows[3] = "# # # # #   # # #   #   # # # #  #    # ##  #   # # # # # # #   # # # #   #  #  # # # # ### # #  #  #   ";
+        rows[4] = "# # ##   ## ##  ### #   ### # # ### ### # # ### # # # # ### #     # # # ###  #  ###  #  # # # #  #  ###  ";
+
+        StringBuilder[] asciiLines = new StringBuilder[H];
+        for (int i = 0; i < H; i++) {
+            asciiLines[i] = new StringBuilder();
+        }
+
+        for (int j = 0; j < input.length(); j++) {
+            char c = input.charAt(j);
+            int index = (c >= 'A' && c <= 'Z') ? c - 'A' : 26;
+
+            for (int i = 0; i < H; i++) {
+                int start = index * L;
+                int end = start + L;
+                if (end <= rows[i].length()) {
+                    asciiLines[i].append(rows[i], start, end);
+                } else {
+                    asciiLines[i].append("????");
+                }
             }
-            int index = Character.isLetter(c) ? c - 'A' : 26;
-            int startPos = index * CHAR_WIDTH;
-            line.append(ASCII_ART[row], startPos, startPos + CHAR_WIDTH);
-            firstChar = false;
         }
-        return line.toString();
+
+        out.println("<pre>");
+        for (int i = 0; i < H; i++) {
+            out.println(asciiLines[i].toString());
+        }
+        out.println("</pre>");
     }
-}
 %>
 <!DOCTYPE html>
 <html lang="fr">
