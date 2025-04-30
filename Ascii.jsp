@@ -14,7 +14,7 @@
         <pre id="result"></pre>
     </div>
     <script src="script.js"></script>
-body {
+<body {
     font-family: Arial, sans-serif;
     max-width: 800px;
     margin: 0 auto;
@@ -22,16 +22,16 @@ body {
     text-align: center;
 }
 
-#asciiForm {
+<#asciiForm {
     margin: 20px 0;
 }
 
-#textInput {
+<#textInput {
     padding: 10px;
     width: 300px;
 }
 
-button {
+<button {
     padding: 10px 20px;
     background-color: #4CAF50;
     color: white;
@@ -39,11 +39,11 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+<button:hover {
     background-color: #45a049;
 }
 
-#result {
+<#result {
     background-color: #f4f4f4;
     padding: 20px;
     border-radius: 5px;
