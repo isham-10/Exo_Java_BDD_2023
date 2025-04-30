@@ -22,7 +22,10 @@
             }
         }
         %>
-<%public class AsciiArtGenerator {
+<%import java.util.Scanner;
+
+public class AsciiArtConsole {
+
     private static final String[] ASCII_ART = {
         " #  ##   ## ##  ### ###  ## # # ###  ## # # #   # # ###  #  ##   #  ##   ## ### # # # # # # # # # # ### ### ",
         "# # # # #   # # #   #   #   # #  #    # # # #   ### # # # # # # # # # # #    #  # # # # # # # # # #   #   # ",
@@ -31,26 +34,37 @@
         "# # ##   ## ##  ### #    ## # # ###  #  # # ### # # # #  #  #     # # # ##   #  ###  #  # # # #  #  ###  #  "
     };
 
-    public static String generate(String text) {
-        int L = 4; // Largeur fixe
-        int H = 5; // Hauteur fixe
-        StringBuilder result = new StringBuilder();
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
         
-        text = text.toUpperCase();
+        System.out.println("╔══════════════════════════════╗");
+        System.out.println("║    GÉNÉRATEUR ASCII ART      ║");
+        System.out.println("╚══════════════════════════════╝");
+        System.out.print("\nEntrez votre texte : ");
+        String text = scanner.nextLine().toUpperCase();
+        
+        System.out.println("\nRésultat ASCII Art :\n");
+        generateAsciiArt(text);
+        
+        scanner.close();
+    }
+
+    public static void generateAsciiArt(String text) {
+        int L = 4; // Largeur d'un caractère
+        int H = 5; // Hauteur d'un caractère
         
         for (int h = 0; h < H; h++) {
-            StringBuilder line = new StringBuilder();
             for (char c : text.toCharArray()) {
                 int index = (c >= 'A' && c <= 'Z') ? c - 'A' : 26;
                 int start = index * L;
-                line.append(ASCII_ART[h].substring(start, start + L));
+                System.out.print(ASCII_ART[h].substring(start, start + L));
             }
-            result.append(line.toString()).append("<br>");
+            System.out.println();
         }
-        
-        return result.toString();
     }
 }
+javac AsciiArtConsole.java
+java AsciiArtConsole
 %>
 </body>
 </html>
