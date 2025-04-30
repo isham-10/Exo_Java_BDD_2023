@@ -28,11 +28,15 @@ public class AsciiArtGenerator {
 
     private String buildAsciiLine(int row, String text) {
         StringBuilder line = new StringBuilder();
+        boolean firstChar = true;
         for (char c : text.toCharArray()) {
+            if (!firstChar) {
+                line.append(" "); // Ajoute un espace avant chaque caractère sauf le premier
+            }
             int index = Character.isLetter(c) ? c - 'A' : 26;
             int startPos = index * CHAR_WIDTH;
-            // Ajout d'un espace après chaque caractère ASCII
-            line.append(ASCII_ART[row], startPos, startPos + CHAR_WIDTH).append(" ");
+            line.append(ASCII_ART[row], startPos, startPos + CHAR_WIDTH);
+            firstChar = false;
         }
         return line.toString();
     }
