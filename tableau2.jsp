@@ -1,4 +1,3 @@
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <html>
 <head>
@@ -87,6 +86,7 @@
             background: url('https://www.transparenttextures.com/patterns/galaxy.png');
             opacity: 0.5;
             animation: galaxyAnimation 60s linear infinite;
+            z-index: -1;
         }
 
         @keyframes galaxyAnimation {
@@ -108,52 +108,9 @@
 </form>
 
 <%
-    // Initialisation du tableau
     if (session.getAttribute("tableau") == null) {
-        session.setAttribute("tableau", new ArrayList<Integer>());
+        session.setAttribute("tableau", new java.util.ArrayList<Integer>());
     }
 
-    ArrayList<Integer> tableau = (ArrayList<Integer>) session.getAttribute("tableau");
-    String action = request.getParameter("action");
-    String message = "";
-
-    if ("Ajouter".equals(action)) {
-        String valueStr = request.getParameter("value");
-        if (valueStr != null && !valueStr.trim().isEmpty()) {
-            try {
-                int value = Integer.parseInt(valueStr);
-                if (tableau.size() < 10) {
-                    tableau.add(value);
-                    message = "Valeur ajoutée avec succès.";
-                } else {
-                    message = "Tableau plein. Impossible d'ajouter plus de 10 valeurs.";
-                }
-            } catch (NumberFormatException e) {
-                message = "Valeur invalide. Veuillez entrer un entier.";
-            }
-        }
-    } else if ("Supprimer".equals(action)) {
-        if (!tableau.isEmpty()) {
-            tableau.remove(tableau.size() - 1);
-            message = "Dernière valeur supprimée avec succès.";
-        } else {
-            message = "Tableau vide. Rien à supprimer.";
-        }
-    } else if ("Afficher".equals(action)) {
-        message = "Contenu actuel du tableau : " + tableau.toString();
-    } else if ("Vider".equals(action)) {
-        tableau.clear();
-        message = "Tableau vidé avec succès.";
-    }
-
-    session.setAttribute("tableau", tableau);
-%>
-
-<div class="results">
-    <h2>Résultats :</h2>
-    <p><%= message %></p>
-</div>
-
-<a href="index.html">Retour au sommaire</a>
-</body>
-</html>
+    java.util.ArrayList<Integer> tableau = (java.util.ArrayList<Integer>) session.getAttribute("tableau");
+    String action =
